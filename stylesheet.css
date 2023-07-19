@@ -108,5 +108,9 @@ button {
     background-color: rgba(241, 161, 13, 0.7);
 }
 
+.button-clicked {
+    border: 1px solid yellow;
+}
+
 
 

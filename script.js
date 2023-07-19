@@ -1,6 +1,7 @@
 let num1;
 let num2;
 let operator;
+let clickedButton = null;
 
 function add(num1, num2) {
     return num1 + num2;
@@ -31,12 +32,19 @@ function operate(num1, num2, operator) {
     }
 }
 
+// Change border color when user clicks on a button
 buttons = document.querySelectorAll(".button-wrapper");
 buttons.forEach(button => {
-    console.log(button.style.backgroundColor);
+    button.addEventListener("mousedown", event => {
+        clickedButton = button;
+        clickedButton.classList.add("button-clicked");
+    });
 });
 
-button = document.querySelector(".button-wrapper")
-console.log(button.style.backgroundColor);
-
+document.body.addEventListener("mouseup", event => {
+    if (clickedButton !== null) {
+        clickedButton.classList.remove("button-clicked");
+        clickedButton = null;
+    }
+});
 
