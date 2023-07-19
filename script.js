@@ -31,6 +31,12 @@ function operate(num1, num2, operator) {
     }
 }
 
+buttons = document.querySelectorAll(".button-wrapper");
+buttons.forEach(button => {
+    console.log(button.style.backgroundColor);
+});
 
+button = document.querySelector(".button-wrapper")
+console.log(button.style.backgroundColor);
 
 

@@ -69,7 +69,7 @@ body {
     height: 70px;
     border-radius: 10px;
     border-style: solid;
-    background-color: #eee;
+    background-color: #eeeeee;
 } 
 
 .button-wrapper:hover {
@@ -81,7 +81,7 @@ button {
     height: 100%;
     background-color: transparent;
     border: 0;
-    font-size: 16px;
+    font-size: 20px;
 } 
 
 #clear {
@@ -98,6 +98,14 @@ button {
 
 #delete:hover {
     background-color: rgba(170, 170, 255, 0.7);
+}
+
+.operation-button {
+    background-color: rgb(241, 161, 13);
+}
+
+.operation-button:hover {
+    background-color: rgba(241, 161, 13, 0.7);
 }
 
 
