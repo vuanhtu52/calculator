@@ -1,6 +1,7 @@
 let num1 = null;
 let num2 = null;
 let operator = null;
+let click = false;
 let clickedButton = null; // Keep track of which button is clicked
 let previousButton = null;
 let operation = ""; // Save the current operation to display
@@ -127,19 +128,23 @@ function updateDisplay() {
 const buttons = document.querySelectorAll(".button-wrapper");
 buttons.forEach(button => {
     button.addEventListener("mousedown", () => {
+        click = true;
         previousButton = clickedButton;
         clickedButton = button;
         clickedButton.classList.add("button-clicked");
+        console.log(button);
     });
 });
 
 // Detect when user releases the mouse after clicking a button
 document.body.addEventListener("mouseup", () => {
-    if (clickedButton !== null) {
+    if (click) {
         // Reset border color once user releases the mouse
         clickedButton.classList.remove("button-clicked");
         // Update display 
         updateDisplay();
+        // clickedButton = null;
     }
+    click = false;
 });
 
