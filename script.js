@@ -1,5 +1,5 @@
-let num1;
-let num2;
+let num1 = null;
+let num2 = null;
 let operator = null;
 let clickedButton = null; // Keep track of which button is clicked
 let previousButton = null;
@@ -65,7 +65,6 @@ function updateDisplay() {
     if (operators.includes(clickedButton.id)) {
         // If there is already an operator, do the calculation first before continuing with this next operator
         if (nextOperation()) {
-            console.log("hello");
             num2 = parseInt(operation.split(operator)[1]);
             result = operate(num1, num2, operator);
             resultDisplay.textContent = result.toString();
@@ -99,11 +98,19 @@ function updateDisplay() {
     if (clickedButton.id === "=") {
         // If the previous button is a number, do the calculation and update display
         if (previousButton !== null && !isNaN(previousButton.id)) {
-            num2 = parseInt(operation.split(operator)[1]);
-            result = operate(num1, num2, operator);
-            operation += "=";
-            operationDisplay.textContent = operation;
-            resultDisplay.textContent = result.toString();
+            // If user only enters a number and clicks "="
+            if (num1 === null) {
+                result = parseInt(operation);
+                operation += "=";
+                operationDisplay.textContent = operation;
+                resultDisplay.textContent = result.toString();
+            } else {
+                num2 = parseInt(operation.split(operator)[1]);
+                result = operate(num1, num2, operator);
+                operation += "=";
+                operationDisplay.textContent = operation;
+                resultDisplay.textContent = result.toString();
+            }
         } 
         // If the previous button is an operator and there's only one number, returns result (e.g. 1+) 
         if (previousButton !== null && operators.includes(previousButton.id)) {
