@@ -104,7 +104,7 @@ function backspace() {
             operation = operation.substring(0, operation.length - 1);
         }
     }
-    operationDisplay.textContent = operation;
+    operationDisplay.textContent = formatOperation(operation);
 }
 
 function hasOperator() {
@@ -114,6 +114,20 @@ function hasOperator() {
         }
     }
     return false;
+}
+
+function formatOperation() {
+    let result = "";
+    const symbols = ["+", "-", "x", "÷", "="];
+    for (let i = 0; i < operation.length; i++) {
+        if (symbols.includes(operation.charAt(i))) {
+            result += ` ${operation.charAt(i)} `;
+        } else {
+            result += operation.charAt(i);
+        }
+    }
+    result = result.trim();
+    return result;
 }
 
 function updateDisplay() {
@@ -127,7 +141,7 @@ function updateDisplay() {
                 operation = "";
             }
             operation += clickedButton.id;
-            operationDisplay.textContent = operation;
+            operationDisplay.textContent = formatOperation(operation);
         }
     }
 
@@ -136,7 +150,7 @@ function updateDisplay() {
         if (operation.length < 10) {
             if (canAddDecimal()) {
                 operation += clickedButton.id;
-                operationDisplay.textContent = operation;
+                operationDisplay.textContent = formatOperation(operation);
             }
         }
     }
@@ -157,21 +171,21 @@ function updateDisplay() {
                 num1 = 0;
                 operator = clickedButton.id;
                 operation = num1.toString() + operator;
-                operationDisplay.textContent = operation;
+                operationDisplay.textContent = formatOperation(operation);
             }
             // If the last character is a number, store the current number and update display
             if (!isNaN(operation.slice(-1))) {
                 num1 = parseFloat(operation);
                 operator = clickedButton.id;
                 operation += clickedButton.id;
-                operationDisplay.textContent = operation;
+                operationDisplay.textContent = formatOperation(operation);
             }
             // If the last character is "=", add result to num1 and update display
             if (operation.endsWith("=")) {
                 num1 = result;
                 operator = clickedButton.id;
                 operation = num1.toString() + operator;
-                operationDisplay.textContent = operation;
+                operationDisplay.textContent = formatOperation(operation);
             }
         }
     }
@@ -184,13 +198,13 @@ function updateDisplay() {
             if (!hasOperator()) {
                 result = parseFloat(operation);
                 operation += "=";
-                operationDisplay.textContent = operation;
+                operationDisplay.textContent = formatOperation(operation);
                 resultDisplay.textContent = result.toString();
             } else {
                 num2 = parseFloat(operation.split(operator)[1]);
                 result = operate(num1, num2, operator);
                 operation += "=";
-                operationDisplay.textContent = operation;
+                operationDisplay.textContent = formatOperation(operation);
                 resultDisplay.textContent = result.toString();
             }
         }
@@ -198,7 +212,7 @@ function updateDisplay() {
         if (operators.includes(operation.slice(-1))) {
             result = num1;
             operation = operation.substring(0, operation.length - 1) + "=";
-            operationDisplay.textContent = operation;
+            operationDisplay.textContent = formatOperation(operation);
             resultDisplay.textContent = result.toString();
         }
     }
