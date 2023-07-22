@@ -49,10 +49,40 @@ function nextOperation() {
     return false;
 }
 
+function canAddDecimal() {
+    let tempOperator = null;
+    let tempNum1 = null;
+    let tempNum2 = null;
+    // If the previous button clicked is not a digit, user cannot add the decimal
+    if (previousButton === null || isNaN(previousButton.id)) {
+        return false;
+    }
+    // Detect if the current operation has an operator
+    for (let symbol of operators) {
+        if (operation.includes(symbol)) {
+            tempOperator = symbol;
+        }
+    }
+    // When user is entering num1
+    if (tempOperator === null) {
+        tempNum1 = operation;
+        if (!tempNum1.includes(".")) {
+            return true;
+        }
+    } else { // When user is entering num2
+        tempNum2 = operation.split(tempOperator)[1];
+        if (!tempNum2.includes(".")) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 function updateDisplay() {
     // When user clicks a number
     if (!isNaN(clickedButton.id)) {
-        if (previousButton !== null && previousButton.id === "=") {
+        if (operation.endsWith("=")) {
             num1 = null;
             num2 = null;
             operator = null;
@@ -62,11 +92,19 @@ function updateDisplay() {
         operationDisplay.textContent = operation;
     }
 
+    // when user clicks "."
+    if (clickedButton.id === ".") {
+        if (canAddDecimal()) {
+            operation += clickedButton.id;
+            operationDisplay.textContent = operation;
+        }
+    }
+
     // When user clicks an operator
     if (operators.includes(clickedButton.id)) {
         // If there is already an operator, do the calculation first before continuing with this next operator
         if (nextOperation()) {
-            num2 = parseInt(operation.split(operator)[1]);
+            num2 = parseFloat(operation.split(operator)[1]);
             result = operate(num1, num2, operator);
             resultDisplay.textContent = result.toString();
             operation = result.toString();
@@ -81,7 +119,7 @@ function updateDisplay() {
         }
         // If the previous button is a number, store the current number and update display
         if (previousButton !== null && !isNaN(previousButton.id)) {
-            num1 = parseInt(operation);
+            num1 = parseFloat(operation);
             operator = clickedButton.id;
             operation += clickedButton.id;
             operationDisplay.textContent = operation;
@@ -101,12 +139,12 @@ function updateDisplay() {
         if (previousButton !== null && !isNaN(previousButton.id)) {
             // If user only enters a number and clicks "="
             if (num1 === null) {
-                result = parseInt(operation);
+                result = parseFloat(operation);
                 operation += "=";
                 operationDisplay.textContent = operation;
                 resultDisplay.textContent = result.toString();
             } else {
-                num2 = parseInt(operation.split(operator)[1]);
+                num2 = parseFloat(operation.split(operator)[1]);
                 result = operate(num1, num2, operator);
                 operation += "=";
                 operationDisplay.textContent = operation;
@@ -132,7 +170,6 @@ buttons.forEach(button => {
         previousButton = clickedButton;
         clickedButton = button;
         clickedButton.classList.add("button-clicked");
-        console.log(button);
     });
 });
 
@@ -143,7 +180,6 @@ document.body.addEventListener("mouseup", () => {
         clickedButton.classList.remove("button-clicked");
         // Update display 
         updateDisplay();
-        // clickedButton = null;
     }
     click = false;
 });
