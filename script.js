@@ -79,6 +79,16 @@ function canAddDecimal() {
     return false;
 }
 
+function reset() {
+    num1 = null;
+    num2 = null;
+    operator = null;
+    operation = "";
+    result = 0;
+    operationDisplay.textContent = operation;
+    resultDisplay.textContent = result.toString();
+}
+
 function updateDisplay() {
     // When user clicks a number
     if (!isNaN(clickedButton.id)) {
@@ -158,6 +168,11 @@ function updateDisplay() {
             operationDisplay.textContent = operation;
             resultDisplay.textContent = result.toString();
         } 
+    }
+
+    // When user clicks "CLEAR"
+    if (clickedButton.id === "clear") {
+        reset();
     }
 }
 
