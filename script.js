@@ -31,7 +31,7 @@ function multiply(num1, num2) {
 function divide(num1, num2) {
     if (num2 === 0) {
         openPopUp();
-        return null;
+        return result;
     } 
     result = num1 / num2;
     result = Math.round(result * 1000) / 1000;
