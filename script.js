@@ -40,7 +40,7 @@ function operate(num1, num2, operator) {
             return add(num1, num2);
         case "-":
             return subtract(num1, num2);
-        case "x": 
+        case "x":
             return multiply(num1, num2);
         case "÷":
             return divide(num1, num2);
@@ -119,56 +119,62 @@ function hasOperator() {
 function updateDisplay() {
     // When user clicks a number
     if (!isNaN(clickedButton.id)) {
-        if (operation.endsWith("=")) {
-            num1 = null;
-            num2 = null;
-            operator = null;
-            operation = "";
-        } 
-        operation += clickedButton.id;
-        operationDisplay.textContent = operation;
+        if (operation.length < 10) {
+            if (operation.endsWith("=")) {
+                num1 = null;
+                num2 = null;
+                operator = null;
+                operation = "";
+            }
+            operation += clickedButton.id;
+            operationDisplay.textContent = operation;
+        }
     }
 
     // when user clicks "."
     if (clickedButton.id === ".") {
-        if (canAddDecimal()) {
-            operation += clickedButton.id;
-            operationDisplay.textContent = operation;
+        if (operation.length < 10) {
+            if (canAddDecimal()) {
+                operation += clickedButton.id;
+                operationDisplay.textContent = operation;
+            }
         }
     }
 
     // When user clicks an operator
     if (operators.includes(clickedButton.id)) {
-        // If there is already an operator, do the calculation first before continuing with this next operator
-        if (nextOperation()) {
-            num2 = parseFloat(operation.split(operator)[1]);
-            result = operate(num1, num2, operator);
-            resultDisplay.textContent = result.toString();
-            operation = result.toString();
-        }
+        if (operation.length < 10) {
+            // If there is already an operator, do the calculation first before continuing with this next operator
+            if (nextOperation()) {
+                num2 = parseFloat(operation.split(operator)[1]);
+                result = operate(num1, num2, operator);
+                resultDisplay.textContent = result.toString();
+                operation = result.toString();
+            }
 
-        // At the beginning, if user clicks an operator button, add 0 to the first number
-        if (operation === "") {
-            num1 = 0;
-            operator = clickedButton.id;
-            operation = num1.toString() + operator;
-            operationDisplay.textContent = operation;
+            // At the beginning, if user clicks an operator button, add 0 to the first number
+            if (operation === "") {
+                num1 = 0;
+                operator = clickedButton.id;
+                operation = num1.toString() + operator;
+                operationDisplay.textContent = operation;
+            }
+            // If the last character is a number, store the current number and update display
+            if (!isNaN(operation.slice(-1))) {
+                num1 = parseFloat(operation);
+                operator = clickedButton.id;
+                operation += clickedButton.id;
+                operationDisplay.textContent = operation;
+            }
+            // If the last character is "=", add result to num1 and update display
+            if (operation.endsWith("=")) {
+                num1 = result;
+                operator = clickedButton.id;
+                operation = num1.toString() + operator;
+                operationDisplay.textContent = operation;
+            }
         }
-        // If the last character is a number, store the current number and update display
-        if (!isNaN(operation.slice(-1))) {
-            num1 = parseFloat(operation);
-            operator = clickedButton.id;
-            operation += clickedButton.id;
-            operationDisplay.textContent = operation;
-        }
-        // If the last character is "=", add result to num1 and update display
-        if (operation.endsWith("=")) {
-            num1 = result;
-            operator = clickedButton.id;
-            operation = num1.toString() + operator;
-            operationDisplay.textContent = operation;
-        }
-    } 
+    }
 
     // When user clicks "="
     if (clickedButton.id === "=") {
@@ -187,14 +193,14 @@ function updateDisplay() {
                 operationDisplay.textContent = operation;
                 resultDisplay.textContent = result.toString();
             }
-        } 
+        }
         // If the last character is an operator and there's only one number, returns result (e.g. 1+) 
         if (operators.includes(operation.slice(-1))) {
             result = num1;
             operation = operation.substring(0, operation.length - 1) + "=";
             operationDisplay.textContent = operation;
             resultDisplay.textContent = result.toString();
-        } 
+        }
     }
 
     // When user clicks "CLEAR"
