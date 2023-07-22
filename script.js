@@ -3,7 +3,6 @@ let num2 = null;
 let operator = null;
 let click = false;
 let clickedButton = null; // Keep track of which button is clicked
-let previousButton = null;
 let operation = ""; // Save the current operation to display
 let result = 0; // Save the current result to display
 const operators = ["+", "-", "x", "÷"]
@@ -42,7 +41,7 @@ function operate(num1, num2, operator) {
 
 function nextOperation() {
     for (let symbol of operators) {
-        if (operation.includes(symbol) && previousButton !== null && !isNaN(previousButton.id)) {
+        if (operation.includes(symbol) && !isNaN(operation.slice(-1))) {
             return true;
         }
     }
@@ -54,7 +53,7 @@ function canAddDecimal() {
     let tempNum1 = null;
     let tempNum2 = null;
     // If the previous button clicked is not a digit, user cannot add the decimal
-    if (previousButton === null || isNaN(previousButton.id)) {
+    if (isNaN(operation.slice(-1))) {
         return false;
     }
     // Detect if the current operation has an operator
@@ -89,6 +88,26 @@ function reset() {
     resultDisplay.textContent = result.toString();
 }
 
+function backspace() {
+    if (operation !== "") {
+        if (operation.startsWith("-") && operation.length == 2) {
+            operation = "";
+        } else {
+            operation = operation.substring(0, operation.length - 1);
+        }
+    }
+    operationDisplay.textContent = operation;
+}
+
+function hasOperator() {
+    for (let symbol of operators) {
+        if (operation.substring(1, operation.length).includes(symbol)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function updateDisplay() {
     // When user clicks a number
     if (!isNaN(clickedButton.id)) {
@@ -121,21 +140,21 @@ function updateDisplay() {
         }
 
         // At the beginning, if user clicks an operator button, add 0 to the first number
-        if (previousButton === null) {
+        if (operation === "") {
             num1 = 0;
             operator = clickedButton.id;
             operation = num1.toString() + operator;
             operationDisplay.textContent = operation;
         }
-        // If the previous button is a number, store the current number and update display
-        if (previousButton !== null && !isNaN(previousButton.id)) {
+        // If the last character is a number, store the current number and update display
+        if (!isNaN(operation.slice(-1))) {
             num1 = parseFloat(operation);
             operator = clickedButton.id;
             operation += clickedButton.id;
             operationDisplay.textContent = operation;
         }
-        // If the previous button is "=", add result to num1 and update display
-        if (previousButton !== null && previousButton.id === "=") {
+        // If the last character is "=", add result to num1 and update display
+        if (operation.endsWith("=")) {
             num1 = result;
             operator = clickedButton.id;
             operation = num1.toString() + operator;
@@ -145,10 +164,10 @@ function updateDisplay() {
 
     // When user clicks "="
     if (clickedButton.id === "=") {
-        // If the previous button is a number, do the calculation and update display
-        if (previousButton !== null && !isNaN(previousButton.id)) {
+        // If the last character is a number, do the calculation and update display
+        if (!isNaN(operation.slice(-1))) {
             // If user only enters a number and clicks "="
-            if (num1 === null) {
+            if (!hasOperator()) {
                 result = parseFloat(operation);
                 operation += "=";
                 operationDisplay.textContent = operation;
@@ -161,8 +180,8 @@ function updateDisplay() {
                 resultDisplay.textContent = result.toString();
             }
         } 
-        // If the previous button is an operator and there's only one number, returns result (e.g. 1+) 
-        if (previousButton !== null && operators.includes(previousButton.id)) {
+        // If the last character is an operator and there's only one number, returns result (e.g. 1+) 
+        if (operators.includes(operation.slice(-1))) {
             result = num1;
             operation = operation.substring(0, operation.length - 1) + "=";
             operationDisplay.textContent = operation;
@@ -174,6 +193,11 @@ function updateDisplay() {
     if (clickedButton.id === "clear") {
         reset();
     }
+
+    // When user clicks "DELETE"
+    if (clickedButton.id === "delete") {
+        backspace();
+    }
 }
 
 // Change border color when user clicks on a button
@@ -182,7 +206,6 @@ const buttons = document.querySelectorAll(".button-wrapper");
 buttons.forEach(button => {
     button.addEventListener("mousedown", () => {
         click = true;
-        previousButton = clickedButton;
         clickedButton = button;
         clickedButton.classList.add("button-clicked");
     });
