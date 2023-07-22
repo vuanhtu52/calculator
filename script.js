@@ -29,6 +29,10 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
+    if (num2 === 0) {
+        openPopUp();
+        return null;
+    } 
     result = num1 / num2;
     result = Math.round(result * 1000) / 1000;
     return result;
@@ -128,6 +132,24 @@ function formatOperation() {
     }
     result = result.trim();
     return result;
+}
+
+function openPopUp() {
+    // Open popup
+    const popup = document.querySelector(".popup");
+    popup.classList.add("open-popup");
+    // Add overlay to prevent user from clicking
+    const overlay = document.querySelector(".overlay");
+    overlay.classList.add("overlay-active");
+}
+
+function closePopup() {
+    // Close popup
+    const popup = document.querySelector(".popup");
+    popup.classList.remove("open-popup");
+    // Remove overlay
+    const overlay = document.querySelector(".overlay");
+    overlay.classList.remove("overlay-active");
 }
 
 function updateDisplay() {
@@ -249,4 +271,11 @@ document.body.addEventListener("mouseup", () => {
     }
     click = false;
 });
+
+// Reset the calculate when the user clicks the button in the popup
+const popupButton = document.querySelector(".popup > button");
+popupButton.addEventListener("click", () => {
+    reset();
+    closePopup();
+})
 
